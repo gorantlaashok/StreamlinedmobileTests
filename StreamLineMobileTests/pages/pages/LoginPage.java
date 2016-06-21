@@ -26,6 +26,12 @@ public class LoginPage {
 	
 	public static final By RoutingHelpIcon = By.xpath("(//*[@class='noselect home__info'])[1]");
 	public static final By AccountNumberHelpIcon = By.xpath("(//*[@class='noselect home__info'])[2]");
+	public static final By PersonalRadioButton = By.id("rbPersonal");
+	public static final By BussinessRadioButton = By.id("rbBusiness");
+	public static final By LoginTextMessage = By.xpath("//form[@class='pure-form pure-g']/div[1]");
+	public static final By MenuIcon = By.xpath("//div[@class='menu__block']//ul");
+	public static final By MenuIconAction = By.xpath("//div[@class='menu']");
+	
 	
 	public static By getErrorMessage(String errorMessage)
 	{
