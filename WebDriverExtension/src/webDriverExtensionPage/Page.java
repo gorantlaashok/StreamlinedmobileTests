@@ -25,8 +25,16 @@ public class Page {
 	
 	/* Methods are listed by alphabetical order*/
 	public static void click(By _element)
-	{		
+	{	
+		AjaxUtil.WaitForAjaxCallsToFinish();
 		getWebDriver().findElement(_element).click();		
+	}
+	
+	public static void click2(By _element)
+	{
+		WebElement element = getWebDriver().findElement(_element);
+		Actions actions = new Actions(getWebDriver());
+		actions.moveToElement(element).click().perform();
 	}
 	
 	public static Boolean isAbscent(By element)
@@ -47,8 +55,13 @@ public class Page {
 	}
 	
 	public static Boolean isPresent(By element)
-	{		
-		return getWebDriver().findElement(element).isDisplayed();						
+	{
+		Boolean found = false;
+		try
+		{
+			found = getWebDriver().findElement(element).isDisplayed();
+		}catch(Exception e){/*do nothing*/}
+		return found;						
 	}
 	
 	public static void enterText(By _element, String _text)

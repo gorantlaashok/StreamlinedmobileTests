@@ -12,4 +12,10 @@ public class ShippingOptionsAndPaymentPage {
 	public static final By QuickShipPM = By.xpath("//*[@class='pure-u-1 checkout__gradient-container']//strong[text()='Quik-Ship® 1 Day PM']");
 	public static final By QuickShip = By.xpath("//*[@class='pure-u-1 checkout__gradient-container']//strong[text()='Quik-Ship® 2 Day']");
 	
+	public static final By SubmitOrder = By.xpath("//a[contains(text(),'Submit Order')]");
+	
+	public static final By TopLeftMenu = By.xpath("//div[@class='menu']");
+	
+	
+	
 }

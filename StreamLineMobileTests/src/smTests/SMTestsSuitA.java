@@ -8,8 +8,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import pages.LoginPage;
+import pages.OrderThankYouPage;
 import pages.SelectShippingMethodPage;
 import pages.ShippingOptionsAndPaymentPage;
+import pages.TopLeftMenuPage;
 import utilitiesPackage.Excel;
 import utility.CheckUtil;
 import webDriverExtensionPage.Page;
@@ -38,7 +40,7 @@ public class SMTestsSuitA extends BaseTest {
 		
 	
 	/*******************************************************************************************
-	 * Test (113495) - SCR1-004-Verify RN is mandatory
+	 * Test (114737) - SCR1-004-Verify RN is mandatory (seems that 113495 is duplicate of this)
 	 * 
 	 * Test Description:
 	 * This test is to verify the RN field is mandatory (Ordermychecks.com by Harland Clarke)
@@ -54,7 +56,7 @@ public class SMTestsSuitA extends BaseTest {
 	 * and 'other' will display corresponding help image
 	 *******************************************************************************************/	
 	@Test
-	public void RN_MandatoryTest_113495()
+	public void RN_MandatoryTest_114737()
 	{
 		Page.goToURL(siteURL);
 		Page.setWindowSize(650,900);
@@ -77,8 +79,7 @@ public class SMTestsSuitA extends BaseTest {
 							Page.isAbscent(LoginPage.ErrorMessage));		
 		
 		 // 3. Validate RN field with on-focus help
-		Page.pressKey(LoginPage.RoutingInputBox, Keys.TAB);
-		//Page.click(LoginPage.ProductImageCarousel);// move away and then set focus
+		Page.pressKey(LoginPage.RoutingInputBox, Keys.TAB);		
 		Page.setFocus(LoginPage.RoutingInputBox);
 		
 		CheckUtil.AddCheck( "RN3_OnfocusHelp",
@@ -131,7 +132,7 @@ public class SMTestsSuitA extends BaseTest {
 	
 	
 	/*******************************************************************************************
-	 * Test (113496) - SCR1-005-Verify RN only allows numeric values
+	 * Test (114738) - SCR1-005-Verify RN only allows numeric values (seems duplicate of 113496)
 	 * 
 	 * Test Description:
 	 * This test is to verify the RN field only allows numeric values (Ordermychecks.com by Harland Clarke)
@@ -147,7 +148,7 @@ public class SMTestsSuitA extends BaseTest {
 	 * 	
 	 *******************************************************************************************/	
 	@Test
-	public void RN_OnlyNumericTest_113496()
+	public void RN_OnlyNumericTest_114738()
 	{
 		Page.goToURL(siteURL);
 		Page.setWindowSize(650,900);
@@ -164,7 +165,7 @@ public class SMTestsSuitA extends BaseTest {
 	
 	
 	/*******************************************************************************************
-	 * Test (113497) - SCR1-006-Verify RN allows up to 9 digits
+	 * Test (114739) - SCR1-006-Verify RN allows up to 9 digits (seems duplicate of 113497)
 	 * 
 	 * Test Description:
 	 * This test is to verify the RN field allows upto 9 digits (Ordermychecks.com by Harland Clarke)
@@ -180,7 +181,7 @@ public class SMTestsSuitA extends BaseTest {
 	 * 	
 	 *******************************************************************************************/	
 	@Test
-	public void RN_MaxDigitsTest_113497()
+	public void RN_MaxDigitsTest_114739()
 	{
 		Page.goToURL(siteURL);
 		Page.setWindowSize(650,900);
@@ -197,7 +198,188 @@ public class SMTestsSuitA extends BaseTest {
 				
 	}
 		
+	/*******************************************************************************************
+	 * Test (114709) - 1-US4173-Verify Trademark symbol on Quikship and CheckProtect_Shipping Screen
+	 * 
+	 * Test Description
+	 * Verify that the Shipping Methods in the shipping screen now have the trademarks next to them:
+	 * Quik-Ship® 1 Day AM
+	 * Quik-Ship® 1 Day PM
+	 * Quik-Ship®
+	 * Trackable CheckProtect®
+	 * 
+	 * 	
+	 *******************************************************************************************/	
+	@Test
+	public void QuickShippingTradeMarksTest_114709()
+	{
+		// get login credentails
+		List<List<String>> crendtials = getCredentailsData();
+		String rn = "";
+		String an ="";
+		String email = "";
+		
+		for(List<String> list : crendtials)
+		{
+			String testID = list.get(0);
+			if ( testID.equals("114709"))
+			{
+				rn = list.get(1);
+				an = list.get(2);
+				email = list.get(3);
+			}
+		}
+		
+		// login
+		Page.goToURL(siteURL);
+		Page.setWindowSize(650,900);
+		
+		Page.enterText(LoginPage.RoutingInputBox, rn);
+		Page.enterText(LoginPage.AccountInputBox, an);
+		
+		Page.click(LoginPage.ContinueButton);
+		
+		Page.enterText(ShippingOptionsAndPaymentPage.email, email);
+		
+		// verify quick shop AM trade Mark
+		Page.click(ShippingOptionsAndPaymentPage.ShippingMethodSelected);				
+		Page.click2(SelectShippingMethodPage.GetRadioOption("Quik-Ship® 1 Day AM"));		
+		Page.click(SelectShippingMethodPage.Done);		
+		CheckUtil.AddCheck("QuickShipAM", "Unable to verify Quick Ship AM TradeMark", Page.isPresent(ShippingOptionsAndPaymentPage.QuickShipAM));
+				
+		// verify quick ship PM trade Mark
+		Page.click(ShippingOptionsAndPaymentPage.ShippingMethodSelected);		
+		Page.click2(SelectShippingMethodPage.GetRadioOption("Quik-Ship® 1 Day PM"));		
+		Page.click(SelectShippingMethodPage.Done);		
+		CheckUtil.AddCheck("QuickShipPM", "Unable to verify Quick Ship PM TradeMark", Page.isPresent(ShippingOptionsAndPaymentPage.QuickShipPM));
+					
+		// verify quick ship trade mark
+		Page.click(ShippingOptionsAndPaymentPage.ShippingMethodSelected);		
+		Page.click2(SelectShippingMethodPage.GetRadioOption("Quik-Ship® 2 Day"));		
+		Page.click(SelectShippingMethodPage.Done);		
+		CheckUtil.AddCheck("QuickShip", "Unable to verify Quick Ship TradeMark", Page.isPresent(ShippingOptionsAndPaymentPage.QuickShip));
+		
+		// verify quick ship check protected
+		Page.click(ShippingOptionsAndPaymentPage.ShippingMethodSelected);		
+		Page.click2(SelectShippingMethodPage.GetRadioOption("Trackable CheckProtect®"));		
+		Page.click(SelectShippingMethodPage.Done);		
+		CheckUtil.AddCheck("CheckProtected", "Unable to verify Trackable Check Protected TradeMark", Page.isPresent(ShippingOptionsAndPaymentPage.TrackableCheckProtected));
+		
+		Assert.assertTrue(CheckUtil.GetStatus(), "At least one of the Checks has failed");
+						
+	}
 	
+	
+	
+	
+	/*******************************************************************************************
+	 * Test (114793) - SCR4-008-Verify Address Email (pre-populated if on the order)
+	 * 
+	 * Requirements:
+	 *	BR-09 If the FI has an email address stored for the customer/account holder, the email address should prepopulate
+	 *	any email address fields within the application.
+	 *	
+	 *	Test Description:
+	 *		Verify that Email address is prepopulated for the customer based on last order (assumption : user has entered
+	 *	an email address on the order)
+	 *	Test Validations:
+	 *
+	 *	Pre-Conditions:
+	 *	 1. User is logged into Mobile Banking
+	 *	 2. User has already clicked on the Order/Review Check out screen
+	 * 	
+	 *******************************************************************************************/	
+	@Test
+	public void EmailTest_114793()
+	{
+		// get login credentails
+		List<List<String>> crendtials = getCredentailsData();
+		String rn = "";
+		String an ="";
+		String email = "";
+		String email2 = "";
+		
+		for(List<String> list : crendtials)
+		{
+			String testID = list.get(0);
+			if ( testID.equals("114793"))
+			{
+				rn = list.get(1);
+				an = list.get(2);
+				email = list.get(3);
+				email2 = list.get(4);
+			}
+		}
+				
+		// login
+		Page.goToURL(siteURL);
+		Page.setWindowSize(650,900);
+		
+		Page.enterText(LoginPage.RoutingInputBox, rn);
+		Page.enterText(LoginPage.AccountInputBox, an);
+		
+		Page.click(LoginPage.ContinueButton);		
+		
+		// verify email is pre-populated
+		String currentEmail = Page.getText(ShippingOptionsAndPaymentPage.email);		
+		CheckUtil.AddCheck("EmailPrePopulated", "Expected Email to be filled, but is null/empty", !currentEmail.isEmpty());
+		
+		// update email to something different than what it is currently
+		String UpdatedEmail = "";
+		if (currentEmail.equals(email))
+			UpdatedEmail = email2;			
+		else
+			UpdatedEmail = email;
+		
+		Page.enterText(ShippingOptionsAndPaymentPage.email, UpdatedEmail);
+		
+		// submit order
+		Page.click(ShippingOptionsAndPaymentPage.SubmitOrder);
+		
+		// logout
+		Page.click(OrderThankYouPage.LogOut);
+		
+		// login
+		Page.enterText(LoginPage.RoutingInputBox, rn);
+		Page.enterText(LoginPage.AccountInputBox, an);
+		
+		Page.click(LoginPage.ContinueButton);	
+		
+		// verify email is now the last updated email
+		currentEmail = Page.getText(ShippingOptionsAndPaymentPage.email);		
+		CheckUtil.AddCheck("LastEmailListed", "Expected " + UpdatedEmail + " Actual Email " + currentEmail, currentEmail.equals(UpdatedEmail));
+		
+		Assert.assertTrue(CheckUtil.GetStatus(), "At least one of the Checks has failed");
+		
+		// logout
+		Page.click(ShippingOptionsAndPaymentPage.TopLeftMenu);
+		Page.click(TopLeftMenuPage.LogOut);
+		
+	}
+	
+	
+	
+	
+	/*******************************************************************************************
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 	
+	 *******************************************************************************************/	
+	
+	
+	
+	private List<List<String>> getCredentailsData()
+	{
+		String workingDir = System.getProperty("user.dir");		   
+		List<List<String>> SheetRows = Excel.readExcelFile(workingDir + "/TestData/LoginCredentails.xlsx",0);
+		
+		return SheetRows;							
+	}
 	
 	
 	
